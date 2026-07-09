@@ -1,0 +1,30 @@
+# ──────────────────────────────────
+# Weekly Pulse Pipeline — .gitignore
+# ──────────────────────────────────
+
+# Environment secrets
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# Data artifacts (generated at runtime)
+data/*.json
+data/*.csv
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+Thumbs.db
+.DS_Store
