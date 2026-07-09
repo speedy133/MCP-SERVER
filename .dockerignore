@@ -1,0 +1,31 @@
+# Version control
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+venv/
+.venv/
+
+# Environment secrets (Railway sets these via Dashboard)
+.env
+
+# Data artifacts
+data/
+
+# Tests (not needed in production)
+tests/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Docs (not needed at runtime)
+docs/

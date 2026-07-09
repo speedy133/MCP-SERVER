@@ -22,8 +22,6 @@ _REQUIRED_KEYS = [
     "GROQ_API_KEY",
     "MCP_DOCS_SERVER_URL",
     "MCP_GMAIL_SERVER_URL",
-    "APP_ID_PLAY_STORE",
-    "APP_ID_APP_STORE",
     "RECIPIENT_EMAIL",
 ]
 
@@ -43,7 +41,13 @@ def _load_config() -> dict:
         )
         sys.exit(1)
 
-    return {key: os.getenv(key) for key in _REQUIRED_KEYS}
+    config_dict = {key: os.getenv(key) for key in _REQUIRED_KEYS}
+    
+    # Add optional keys
+    config_dict["DEFAULT_PLAY_STORE_ID"] = os.getenv("DEFAULT_PLAY_STORE_ID")
+    config_dict["DEFAULT_APP_STORE_ID"] = os.getenv("DEFAULT_APP_STORE_ID")
+    
+    return config_dict
 
 
 # ── Expose config at module level ──────────────────────────────
