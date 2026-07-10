@@ -20,9 +20,9 @@ class GmailNotifier:
             str: The Draft ID returned by Gmail.
         """
         try:
-            # We assume the Gmail MCP Server has a tool called 'create_draft'
-            raw_result = self.client.call_tool("create_draft", {
-                "to": recipient,
+            # MCP server exposes 'draft_email' tool; 'to' must be a list
+            raw_result = self.client.call_tool("draft_email", {
+                "to": [recipient],
                 "subject": subject,
                 "body": email_body
             })
@@ -35,3 +35,4 @@ class GmailNotifier:
                 
         except Exception as e:
             raise RuntimeError(f"Failed to create draft in Gmail via MCP: {e}")
+

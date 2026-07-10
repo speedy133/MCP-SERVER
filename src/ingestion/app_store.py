@@ -1,4 +1,8 @@
+import logging
+import time
 from app_store_scraper import AppStore
+
+log = logging.getLogger("WeeklyPulse")
 
 def fetch_app_store_reviews(app_id: str, count: int = 100, app_name: str = "app") -> list[dict]:
     """
@@ -12,8 +16,24 @@ def fetch_app_store_reviews(app_id: str, count: int = 100, app_name: str = "app"
     Returns:
         list[dict]: A list of raw review dictionaries returned by app-store-scraper.
     """
-    # Note: app_store_scraper expects the country and app_name. 
-    # app_name doesn't strictly need to be exact for fetching by app_id, but it is required.
-    app = AppStore(country="us", app_name=app_name, app_id=int(app_id))
-    app.review(how_many=count)
-    return app.reviews
+    max_retries = 3
+
+    for attempt in range(1, max_retries + 1):
+        app = AppStore(country="us", app_name=app_name, app_id=int(app_id))
+        try:
+            app.review(how_many=count)
+            if app.reviews:
+                return app.reviews
+            # Got zero reviews — may be a transient empty response, retry
+            log.warning("  App Store attempt %d/%d returned 0 reviews.", attempt, max_retries)
+        except Exception as e:
+            log.warning("  App Store attempt %d/%d failed: %s", attempt, max_retries, e)
+
+        if attempt < max_retries:
+            wait = 2 ** attempt  # 2s, 4s
+            log.info("  Retrying App Store fetch in %ds...", wait)
+            time.sleep(wait)
+
+    log.warning("  All %d App Store fetch attempts exhausted — returning empty list.", max_retries)
+    return []
+
