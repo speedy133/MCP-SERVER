@@ -12,5 +12,5 @@ COPY src/ src/
 COPY .env.example .env.example
 
 # Default command runs the FastAPI server
-# Railway injects the PORT env var automatically
-CMD uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8000}
+# Railway will route to port 8080
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8080"]
