@@ -58,7 +58,7 @@ function App() {
           <div className="relative flex items-center w-full">
             <span className="material-symbols-outlined absolute left-lg text-outline-variant group-focus-within:text-primary transition-colors z-10">search</span>
             <input 
-              className="w-full h-16 pl-2xl pr-[140px] rounded-xl glass-input text-on-surface font-body-base text-body-base placeholder:text-outline-variant" 
+              className="w-full h-16 pl-2xl pr-[140px] rounded-xl glass-input text-black font-body-base text-body-base placeholder:text-outline-variant" 
               placeholder="e.g. Groww, WhatsApp, Spotify" 
               type="text" 
               value={appName}
@@ -182,18 +182,7 @@ function App() {
         )}
       </main>
 
-      <footer className="bg-surface-container-lowest w-full py-xl border-t border-outline-variant mt-auto relative z-10">
-        <div className="flex flex-col md:flex-row justify-between items-center px-gutter max-w-container-max mx-auto gap-md">
-          <div className="text-label-caps font-label-caps text-on-surface">
-              © 2024 Weekly Pulse AI. All rights reserved.
-          </div>
-          <div className="flex gap-md font-body-sm text-body-sm text-on-surface-variant">
-            <a className="opacity-80 hover:opacity-100 hover:text-primary-fixed-dim transition-colors" href="#">Privacy Policy</a>
-            <a className="opacity-80 hover:opacity-100 hover:text-primary-fixed-dim transition-colors" href="#">Terms of Service</a>
-            <a className="opacity-80 hover:opacity-100 hover:text-primary-fixed-dim transition-colors" href="#">Contact Support</a>
-          </div>
-        </div>
-      </footer>
+
     </>
   )
 }
