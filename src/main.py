@@ -68,110 +68,79 @@ def parse_args():
     return args
 
 
-def main():
-    # ── Load config ────────────────────────────────────────────
-    try:
-        from src.config import config
-    except SystemExit:
-        log.error("Missing environment variables. Check your .env file.")
-        return
-    except Exception as e:
-        log.error("Failed to load config: %s", e)
-        return
-
-    args = parse_args()
+def run_pipeline(play_store_id: str, app_store_id: str, count: int) -> dict:
+    """Run the end-to-end pulse pipeline and return the results."""
+    from src.config import config
+    
     log.info("=" * 60)
     log.info("  Weekly Pulse Pipeline")
-    log.info("  Play Store: %s | App Store: %s", args.play_store_id, args.app_store_id)
-    log.info("  Reviews per store: %d", args.count)
+    log.info("  Play Store: %s | App Store: %s", play_store_id, app_store_id)
+    log.info("  Reviews per store: %d", count)
     log.info("=" * 60)
-    
-    log.info("Configuration loaded successfully.")
 
     # ── Phase 1: Ingest Reviews ────────────────────────────────
     log.info("-" * 40)
     log.info("PHASE 1: Fetching reviews...")
 
-    try:
-        from src.ingestion.play_store import fetch_play_store_reviews
-        from src.ingestion.app_store import fetch_app_store_reviews
-        from src.ingestion.normalizer import normalize, deduplicate
-        from src.ingestion.sanitizer import sanitize
+    from src.ingestion.play_store import fetch_play_store_reviews
+    from src.ingestion.app_store import fetch_app_store_reviews
+    from src.ingestion.normalizer import normalize, deduplicate
+    from src.ingestion.sanitizer import sanitize
 
-        log.info("  Fetching Play Store reviews for '%s'...", args.play_store_id)
-        play_raw = fetch_play_store_reviews(args.play_store_id, count=args.count)
-        log.info("  Fetched %d raw Play Store reviews.", len(play_raw))
+    log.info("  Fetching Play Store reviews for '%s'...", play_store_id)
+    play_raw = fetch_play_store_reviews(play_store_id, count=count)
+    log.info("  Fetched %d raw Play Store reviews.", len(play_raw))
 
-        log.info("  Fetching App Store reviews for '%s'...", args.app_store_id)
-        app_raw = fetch_app_store_reviews(args.app_store_id, count=args.count)
-        log.info("  Fetched %d raw App Store reviews.", len(app_raw))
+    log.info("  Fetching App Store reviews for '%s'...", app_store_id)
+    app_raw = fetch_app_store_reviews(app_store_id, count=count)
+    log.info("  Fetched %d raw App Store reviews.", len(app_raw))
 
-        # Normalize
-        play_reviews = normalize(play_raw, "play_store")
-        app_reviews = normalize(app_raw, "app_store")
-        all_reviews = play_reviews + app_reviews
-        log.info("  Normalized: %d reviews (%d Play + %d App).",
-                 len(all_reviews), len(play_reviews), len(app_reviews))
+    # Normalize
+    play_reviews = normalize(play_raw, "play_store")
+    app_reviews = normalize(app_raw, "app_store")
+    all_reviews = play_reviews + app_reviews
+    log.info("  Normalized: %d reviews (%d Play + %d App).",
+                len(all_reviews), len(play_reviews), len(app_reviews))
 
-        # Deduplicate
-        all_reviews = deduplicate(all_reviews)
-        log.info("  After deduplication: %d reviews.", len(all_reviews))
+    # Deduplicate
+    all_reviews = deduplicate(all_reviews)
+    log.info("  After deduplication: %d reviews.", len(all_reviews))
 
-        # Sanitize PII
-        all_reviews = sanitize(all_reviews)
-        log.info("  After PII sanitization: %d clean reviews.", len(all_reviews))
+    # Sanitize PII
+    all_reviews = sanitize(all_reviews)
+    log.info("  After PII sanitization: %d clean reviews.", len(all_reviews))
 
-        if not all_reviews:
-            log.error("No reviews survived filtering. Try a different app or increase --count.")
-            return
-
-    except Exception as e:
-        log.error("PHASE 1 FAILED: %s", e)
-        log.debug(traceback.format_exc())
-        return
+    if not all_reviews:
+        raise ValueError("No reviews survived filtering. Try a different app or increase count.")
 
     # ── Phase 2: LLM Analysis (Groq) ─────────────────────────
     log.info("-" * 40)
     log.info("PHASE 2: Generating pulse analysis via Groq...")
 
-    try:
-        from src.drafting.groq_client import GroqClient
-        from src.processing.pulse_generator import PulseGenerator
+    from src.drafting.groq_client import GroqClient
+    from src.processing.pulse_generator import PulseGenerator
 
-        llm = GroqClient(api_key=config["GROQ_API_KEY"])
-        generator = PulseGenerator(llm_client=llm)
-        pulse_report = generator.generate_pulse(all_reviews)
+    llm = GroqClient(api_key=config["GROQ_API_KEY"])
+    generator = PulseGenerator(llm_client=llm)
+    pulse_report = generator.generate_pulse(all_reviews)
 
-        log.info("  Pulse generated: %d themes, %d quotes, %d actions.",
-                 len(pulse_report.themes), len(pulse_report.quotes), len(pulse_report.actions))
+    log.info("  Pulse generated: %d themes, %d quotes, %d actions.",
+                len(pulse_report.themes), len(pulse_report.quotes), len(pulse_report.actions))
 
-        for i, theme in enumerate(pulse_report.themes, 1):
-            log.info("    Theme %d: %s (%s)", i, theme.name, theme.sentiment)
-
-    except Exception as e:
-        log.error("PHASE 2 FAILED: %s", e)
-        log.debug(traceback.format_exc())
-        return
+    for i, theme in enumerate(pulse_report.themes, 1):
+        log.info("    Theme %d: %s (%s)", i, theme.name, theme.sentiment)
 
     # ── Phase 3: Groq Drafting ─────────────────────────────────
     log.info("-" * 40)
     log.info("PHASE 3: Drafting polished report via Groq...")
 
-    try:
-        from src.drafting.groq_client import GroqClient
-        from src.drafting.drafter import ReportDrafter
+    from src.drafting.drafter import ReportDrafter
 
-        groq = GroqClient(api_key=config["GROQ_API_KEY"])
-        drafter = ReportDrafter(groq_client=groq)
-        drafts = drafter.draft_report(pulse_report)
+    drafter = ReportDrafter(groq_client=llm)
+    drafts = drafter.draft_report(pulse_report)
 
-        log.info("  Draft complete (Doc: %d words, Email: %d words).", 
-                 len(drafts.doc_content.split()), len(drafts.email_body.split()))
-
-    except Exception as e:
-        log.error("PHASE 3 FAILED: %s", e)
-        log.debug(traceback.format_exc())
-        return
+    log.info("  Draft complete (Doc: %d words, Email: %d words).", 
+                len(drafts.doc_content.split()), len(drafts.email_body.split()))
 
     # ── Phase 4: Publish to Google Docs via MCP ────────────────
     log.info("-" * 40)
@@ -195,6 +164,7 @@ def main():
     log.info("-" * 40)
     log.info("PHASE 5: Sending email via MCP...")
 
+    confirmation = None
     try:
         from src.integration.gmail_mcp import GmailNotifier
 
@@ -221,12 +191,46 @@ def main():
     # ── Summary ────────────────────────────────────────────────
     log.info("=" * 60)
     log.info("  PIPELINE COMPLETE")
-    log.info("  App: %s / %s", args.play_store_id, args.app_store_id)
+    log.info("  App: %s / %s", play_store_id, app_store_id)
     log.info("  Reviews analyzed: %d", len(all_reviews))
     log.info("  Themes found: %d", len(pulse_report.themes))
     if doc_url:
         log.info("  Google Doc: %s", doc_url)
     log.info("=" * 60)
+    
+    return {
+        "play_store_id": play_store_id,
+        "app_store_id": app_store_id,
+        "reviews_analyzed": len(all_reviews),
+        "themes_found": len(pulse_report.themes),
+        "doc_url": doc_url,
+        "doc_content": drafts.doc_content,
+        "email_body": drafts.email_body,
+        "email_confirmation": confirmation
+    }
+
+
+def main():
+    try:
+        from src.config import config
+    except SystemExit:
+        log.error("Missing environment variables. Check your .env file.")
+        return
+    except Exception as e:
+        log.error("Failed to load config: %s", e)
+        return
+
+    args = parse_args()
+    
+    try:
+        run_pipeline(
+            play_store_id=args.play_store_id,
+            app_store_id=args.app_store_id,
+            count=args.count
+        )
+    except Exception as e:
+        log.error("PIPELINE FAILED: %s", e)
+        log.debug(traceback.format_exc())
 
 
 if __name__ == "__main__":

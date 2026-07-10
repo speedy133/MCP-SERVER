@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from src.ingestion.models import Review
-from .llm_client import LLMClient
+from src.drafting.groq_client import GroqClient
 from .prompts import LOCAL_ANALYSIS_PROMPT, SYNTHESIS_PROMPT
 
 @dataclass
@@ -31,7 +31,7 @@ class PulseGenerator:
     
     CHUNK_SIZE = 50
     
-    def __init__(self, llm_client: LLMClient):
+    def __init__(self, llm_client: GroqClient):
         self.llm = llm_client
         
     def generate_pulse(self, reviews: list[Review]) -> PulseReport:

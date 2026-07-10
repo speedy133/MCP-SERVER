@@ -30,3 +30,28 @@ class GroqClient:
                 if attempt == max_retries - 1:
                     raise RuntimeError(f"Groq generation failed after {max_retries} attempts: {e}")
                 time.sleep(2 ** attempt) # Exponential backoff
+
+    def generate(self, prompt: str, expect_json: bool = True, max_retries: int = 3) -> dict | str:
+        """
+        Send a prompt to Groq and return the response.
+        If expect_json is True, the response is parsed into a Python dict.
+        """
+        import json
+        # We enforce a json type hint in the prompt if we expect JSON
+        json_prompt = prompt
+        if expect_json:
+            json_prompt += "\n\nYou must output ONLY valid JSON format."
+
+        raw_response = self.generate_draft(json_prompt, max_retries)
+        
+        if expect_json:
+            try:
+                # Often LLMs wrap JSON in markdown blocks
+                clean_text = raw_response.strip().removeprefix("```json").removeprefix("```").removesuffix("```").strip()
+                return json.loads(clean_text)
+            except json.JSONDecodeError as e:
+                print(f"Failed to parse Groq response as JSON. Raw response:\n{raw_response}")
+                raise e
+                
+        return raw_response
+

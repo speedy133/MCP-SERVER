@@ -11,6 +11,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ src/
 COPY .env.example .env.example
 
-# Default command — app IDs come from env vars DEFAULT_PLAY_STORE_ID / DEFAULT_APP_STORE_ID
-# These are read by main.py as fallbacks when no CLI args are provided
-CMD ["python", "src/main.py"]
+# Default command runs the FastAPI server
+# Railway injects the PORT env var automatically
+CMD uvicorn src.api:app --host 0.0.0.0 --port ${PORT:-8000}

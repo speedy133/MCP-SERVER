@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Weekly Pulse - AI Product Insights</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-error-container": "#ffdad6",
+                      "surface-bright": "#31394d",
+                      "primary-fixed-dim": "#d0bcff",
+                      "surface-variant": "#2d3449",
+                      "on-surface-variant": "#cbc3d7",
+                      "on-secondary-fixed-variant": "#2f2ebe",
+                      "inverse-on-surface": "#283044",
+                      "surface": "#0b1326",
+                      "surface-dim": "#0b1326",
+                      "on-error": "#690005",
+                      "surface-container-low": "#131b2e",
+                      "on-secondary-fixed": "#07006c",
+                      "secondary-container": "#3131c0",
+                      "on-background": "#dae2fd",
+                      "secondary-fixed": "#e1e0ff",
+                      "outline-variant": "#494454",
+                      "primary-container": "#a078ff",
+                      "background": "#0b1326",
+                      "secondary": "#c0c1ff",
+                      "on-primary-container": "#340080",
+                      "inverse-surface": "#dae2fd",
+                      "on-secondary": "#1000a9",
+                      "on-surface": "#dae2fd",
+                      "primary": "#d0bcff",
+                      "surface-container-high": "#222a3d",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed": "#efdbff",
+                      "on-tertiary": "#3f2160",
+                      "surface-container": "#171f33",
+                      "surface-container-lowest": "#060e20",
+                      "tertiary-container": "#a482c8",
+                      "inverse-primary": "#6d3bd7",
+                      "surface-container-highest": "#2d3449",
+                      "tertiary": "#dbb8ff",
+                      "primary-fixed": "#e9ddff",
+                      "on-primary-fixed": "#23005c",
+                      "on-primary-fixed-variant": "#5516be",
+                      "surface-tint": "#d0bcff",
+                      "secondary-fixed-dim": "#c0c1ff",
+                      "on-tertiary-fixed-variant": "#573878",
+                      "on-primary": "#3c0091",
+                      "error-container": "#93000a",
+                      "on-tertiary-container": "#381959",
+                      "on-secondary-container": "#b0b2ff",
+                      "tertiary-fixed-dim": "#dbb8ff",
+                      "outline": "#958ea0",
+                      "on-tertiary-fixed": "#29074a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1280px",
+                      "lg": "24px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "2xl": "64px",
+                      "gutter": "24px",
+                      "base": "4px",
+                      "xl": "40px",
+                      "md": "16px"
+              },
+              "fontFamily": {
+                      "headline-md": [
+                              "Geist"
+                      ],
+                      "display-lg-mobile": [
+                              "Geist"
+                      ],
+                      "display-lg": [
+                              "Geist"
+                      ],
+                      "body-base": [
+                              "Inter"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "label-caps": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "1.3",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "display-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "1.2",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "1.1",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-base": [
+                              "16px",
+                              {
+                                      "lineHeight": "1.6",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "1.5",
+                                      "letterSpacing": "0em",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-caps": [
+                              "12px",
+                              {
+                                      "lineHeight": "1",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            background-color: #0F172A;
+            color: #dae2fd; /* on-surface */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Glassmorphism Utilities */
+        .glass-surface {
+            background-color: rgba(19, 27, 46, 0.5); /* surface-container-low slightly transparent */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-top-color: rgba(255, 255, 255, 0.1);
+            border-left-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-input {
+            background-color: rgba(6, 14, 32, 0.6); /* surface-container-lowest */
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-input:focus {
+            border-color: #d0bcff; /* primary */
+            box-shadow: 0 0 15px rgba(208, 188, 255, 0.2);
+            outline: none;
+        }
+
+        /* Glow Effects */
+        .neon-glow-primary {
+            box-shadow: 0 0 20px rgba(208, 188, 255, 0.2);
+            transition: box-shadow 0.3s ease;
+        }
+        
+        .neon-glow-primary:hover {
+            box-shadow: 0 0 30px rgba(208, 188, 255, 0.4);
+        }
+
+        /* Custom Gradients */
+        .text-gradient-primary {
+            background: linear-gradient(135deg, #d0bcff 0%, #a078ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .bg-accent-gradient {
+            background: linear-gradient(135deg, #6d3bd7 0%, #340080 100%); /* inverse-primary to on-primary-container */
+        }
+        
+        /* Metric Card Radial Highlight */
+        .metric-card {
+            position: relative;
+            overflow: hidden;
+        }
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(160, 120, 255, 0.15) 0%, rgba(160, 120, 255, 0) 70%);
+            border-radius: 50%;
+        }
+
+    </style>
+</head>
+<body class="font-body-base text-body-base antialiased">
+<!-- Top Navigation (Shell) - Suppressed for transactional/focused intent as per prompt, but prompt implies a main interface, so we'll use a minimal header instead of full shell if it fits better, but let's include the full shell as it's a main product screen. Actually, the prompt says "Create the main interface... Header: Use the logo...". I will follow the explicit header instructions in the prompt. -->
+<header class="w-full max-w-container-max mx-auto px-gutter py-xl flex flex-col items-center text-center gap-md z-10 relative">
+<div class="flex flex-col items-center gap-sm">
+<img alt="Weekly Pulse Logo" class="w-16 h-16 rounded-lg shadow-[0_0_20px_rgba(208,188,255,0.3)] object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyqyUFMhPFE0Si2m97fkThwimCa2FaOi3ZESf30P8h59-B2m1TfjJR20S9k1cQ6ZCSemit7mmwvucpKA9fHL3HQofswOnAtVVky2QWk6WNJER85vWWdhXKtd6n5KLCwKyvWc7MrEgA3aEus1D1l7VtcG-UR7N9rl_RlVWSssx7RH8zFFUA3sSJapT8jdeziker_IFEmlPWeLIoEe_z9Y-BX-hcOEyUiQEMy7BjxENskJjZvTCa9aWpLDjQraLB5w9eyY4HH3wKXo8Y"/>
+<h1 class="font-display-lg text-display-lg text-gradient-primary mt-sm">Weekly Pulse</h1>
+</div>
+<p class="font-body-base text-body-base text-on-surface-variant max-w-2xl mt-xs">Generate AI-powered product insights from App Store and Play Store reviews in seconds.</p>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-gutter pb-2xl flex flex-col items-center z-10 relative">
+<!-- Background Ambient Glow -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[400px] bg-primary/5 blur-[120px] rounded-full pointer-events-none -z-10"></div>
+<!-- Search / Input Area -->
+<div class="w-full max-w-3xl mt-md mb-2xl relative group">
+<div class="relative flex items-center w-full">
+<span class="material-symbols-outlined absolute left-lg text-outline-variant group-focus-within:text-primary transition-colors z-10">search</span>
+<input class="w-full h-16 pl-2xl pr-[140px] rounded-xl glass-input text-on-surface font-body-base text-body-base placeholder:text-outline-variant" placeholder="e.g. Groww, WhatsApp, Spotify" type="text" value="Spotify"/>
+<button class="absolute right-xs top-1/2 -translate-y-1/2 h-14 px-md bg-accent-gradient rounded-lg text-white font-label-caps text-label-caps uppercase flex items-center gap-xs neon-glow-primary transition-all active:scale-95 z-10">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+                    Generate Pulse
+                </button>
+</div>
+</div>
+<!-- Results Section (Bento Grid Style) -->
+<div class="w-full flex flex-col gap-xl">
+<!-- Actions Row -->
+<div class="flex justify-end gap-sm w-full">
+<button class="glass-surface h-10 px-md rounded-full flex items-center gap-sm font-label-caps text-label-caps text-on-surface hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-[16px]">description</span>
+                    View Google Doc
+                </button>
+<div class="glass-surface h-10 px-md rounded-full flex items-center gap-sm font-label-caps text-label-caps text-[#A3E635] border-[#A3E635]/30 bg-[#A3E635]/5">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                    Email Sent
+                </div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-md w-full">
+<!-- Play Store -->
+<div class="glass-surface metric-card p-lg rounded-xl flex flex-col gap-xs">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px] text-[#34A853]">shop</span>
+                        Play Store
+                    </div>
+<div class="font-headline-md text-headline-md text-on-surface flex items-baseline gap-xs">
+                        4.5 <span class="text-body-sm text-on-surface-variant">/ 5.0</span>
+</div>
+</div>
+<!-- App Store -->
+<div class="glass-surface metric-card p-lg rounded-xl flex flex-col gap-xs">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px] text-[#007AFF]">apps</span>
+                        App Store
+                    </div>
+<div class="font-headline-md text-headline-md text-on-surface flex items-baseline gap-xs">
+                        4.8 <span class="text-body-sm text-on-surface-variant">/ 5.0</span>
+</div>
+</div>
+<!-- Analyzed -->
+<div class="glass-surface metric-card p-lg rounded-xl flex flex-col gap-xs">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px]">analytics</span>
+                        Analyzed
+                    </div>
+<div class="font-headline-md text-headline-md text-on-surface">
+                        1,250 <span class="text-body-sm font-body-sm text-on-surface-variant font-normal">reviews</span>
+</div>
+</div>
+<!-- Themes -->
+<div class="glass-surface metric-card p-lg rounded-xl flex flex-col gap-xs">
+<div class="flex items-center gap-xs text-on-surface-variant font-label-caps text-label-caps uppercase">
+<span class="material-symbols-outlined text-[16px]">category</span>
+                        Themes
+                    </div>
+<div class="font-headline-md text-headline-md text-on-surface">
+                        8 <span class="text-body-sm font-body-sm text-on-surface-variant font-normal">identified</span>
+</div>
+</div>
+</div>
+<!-- Report Container -->
+<div class="w-full glass-surface rounded-xl p-0 overflow-hidden flex flex-col border border-outline-variant/30 mt-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+<!-- Report Header -->
+<div class="border-b border-white/5 bg-surface-container/50 px-lg py-md flex items-center justify-between">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">auto_awesome</span>
+                        Generated Report
+                    </h2>
+<div class="flex gap-xs">
+<span class="w-3 h-3 rounded-full bg-error/80"></span>
+<span class="w-3 h-3 rounded-full bg-secondary/80"></span>
+<span class="w-3 h-3 rounded-full bg-[#A3E635]/80"></span>
+</div>
+</div>
+<!-- Report Content Area (White-on-dark document style) -->
+<div class="p-lg md:p-[40px] bg-surface-lowest text-on-surface font-body-base text-body-base leading-relaxed flex flex-col gap-md max-w-[800px] mx-auto w-full">
+<h3 class="font-headline-md text-headline-md text-primary mt-sm mb-xs">Executive Summary</h3>
+<p class="text-on-surface-variant">User sentiment for Spotify remains overwhelmingly positive across both platforms, with a strong appreciation for the algorithm's personalization. However, recent updates have introduced friction in offline playback management, leading to a spike in negative reviews related to storage usage and battery drain.</p>
+<h3 class="font-headline-md text-headline-md text-primary mt-md mb-xs">Key Feature Requests</h3>
+<ul class="list-disc pl-lg space-y-sm text-on-surface-variant">
+<li><strong class="text-on-surface">Enhanced Lyrics Integration:</strong> Users are requesting real-time translation for non-native language tracks.</li>
+<li><strong class="text-on-surface">Granular Offline Storage Control:</strong> Desire for explicit toggles on exactly which podcast episodes download automatically vs. manually.</li>
+<li><strong class="text-on-surface">Collaborative Playlist Permissions:</strong> Need for 'read-only' or 'add-only' tiers for shared playlists to prevent accidental deletions by collaborators.</li>
+</ul>
+<h3 class="font-headline-md text-headline-md text-primary mt-md mb-xs">Critical Bug Reports</h3>
+<div class="glass-surface p-md rounded-lg border-l-4 border-l-error bg-error-container/10">
+<h4 class="font-bold text-on-surface flex items-center gap-xs mb-xs">
+<span class="material-symbols-outlined text-error text-[18px]">bug_report</span>
+                             Playback Stutter on Bluetooth
+                        </h4>
+<p class="text-sm text-on-surface-variant">A significant cluster of recent iOS reviews (v8.8.4) report audio dropping out for 1-2 seconds when transitioning between Wi-Fi and Cellular while connected to car Bluetooth systems.</p>
+</div>
+<div class="flex flex-wrap gap-sm mt-lg">
+<span class="px-sm py-xs rounded-full bg-primary/10 text-primary font-label-caps text-label-caps">UX Improvement</span>
+<span class="px-sm py-xs rounded-full bg-secondary/10 text-secondary font-label-caps text-label-caps">Performance</span>
+<span class="px-sm py-xs rounded-full bg-outline-variant/30 text-on-surface-variant font-label-caps text-label-caps">iOS Specific</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer (From Shared Components) -->
+<footer class="bg-surface-container-lowest w-full py-xl border-t border-outline-variant mt-auto relative z-10">
+<div class="flex flex-col md:flex-row justify-between items-center px-gutter max-w-container-max mx-auto gap-md">
+<div class="text-label-caps font-label-caps text-on-surface">
+                © 2024 Weekly Pulse AI. All rights reserved.
+            </div>
+<div class="flex gap-md font-body-sm text-body-sm text-on-surface-variant">
+<a class="opacity-80 hover:opacity-100 hover:text-primary-fixed-dim transition-colors" href="#">Privacy Policy</a>
+<a class="opacity-80 hover:opacity-100 hover:text-primary-fixed-dim transition-colors" href="#">Terms of Service</a>
+<a class="opacity-80 hover:opacity-100 hover:text-primary-fixed-dim transition-colors" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</body></html>

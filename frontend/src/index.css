@@ -1,0 +1,69 @@
+body {
+    background-color: #0F172A;
+    color: #dae2fd; /* on-surface */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Glassmorphism Utilities */
+.glass-surface {
+    background-color: rgba(19, 27, 46, 0.5); /* surface-container-low slightly transparent */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-top-color: rgba(255, 255, 255, 0.1);
+    border-left-color: rgba(255, 255, 255, 0.1);
+}
+
+.glass-input {
+    background-color: rgba(6, 14, 32, 0.6); /* surface-container-lowest */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+    border-color: #d0bcff; /* primary */
+    box-shadow: 0 0 15px rgba(208, 188, 255, 0.2);
+    outline: none;
+}
+
+/* Glow Effects */
+.neon-glow-primary {
+    box-shadow: 0 0 20px rgba(208, 188, 255, 0.2);
+    transition: box-shadow 0.3s ease;
+}
+
+.neon-glow-primary:hover {
+    box-shadow: 0 0 30px rgba(208, 188, 255, 0.4);
+}
+
+/* Custom Gradients */
+.text-gradient-primary {
+    background: linear-gradient(135deg, #d0bcff 0%, #a078ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.bg-accent-gradient {
+    background: linear-gradient(135deg, #6d3bd7 0%, #340080 100%); /* inverse-primary to on-primary-container */
+}
+
+/* Metric Card Radial Highlight */
+.metric-card {
+    position: relative;
+    overflow: hidden;
+}
+.metric-card::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(160, 120, 255, 0.15) 0%, rgba(160, 120, 255, 0) 70%);
+    border-radius: 50%;
+}
