@@ -1,6 +1,6 @@
 import logging
 import time
-from app_store_scraper import AppStore
+from src.app_store_scraper import AppStore
 
 log = logging.getLogger("WeeklyPulse")
 
