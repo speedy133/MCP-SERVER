@@ -20,8 +20,8 @@ class GmailNotifier:
             str: A confirmation message or message ID returned by Gmail.
         """
         try:
-            # MCP server exposes 'draft_email' tool
-            raw_result = self.client.call_tool("draft_email", {
+            # MCP server exposes 'send_email' tool
+            raw_result = self.client.call_tool("send_email", {
                 "to": [recipient],
                 "subject": subject,
                 "body": email_body

@@ -182,7 +182,7 @@ def run_pipeline(play_store_id: str, app_store_id: str, count: int) -> dict:
             email_body=email_body,
         )
 
-        log.info("  Gmail draft created! %s", confirmation)
+        log.info("  Gmail sent! %s", confirmation)
         log.info("  Recipient: %s", recipient)
 
     except Exception as e:
