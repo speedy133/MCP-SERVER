@@ -59,6 +59,9 @@ def get_credentials() -> Credentials:
                 creds = None
 
         if not creds:
+            if os.environ.get("RAILWAY_ENVIRONMENT") or os.environ.get("CI"):
+                raise RuntimeError("Google OAuth token is missing/invalid in cloud environment. Please set a valid GOOGLE_TOKEN_JSON.")
+                
             if not os.path.exists(creds_path):
                 raise FileNotFoundError(
                     f"Credentials file not found at {creds_path}. "
