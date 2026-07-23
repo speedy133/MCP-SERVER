@@ -22,14 +22,14 @@ def normalize(raw_reviews: list[dict], source: str) -> list[Review]:
             title = raw.get("title") or "" # Sometimes None or missing
             rating = raw.get("score", 0)
             date_obj = raw.get("at")
-            date_str = date_obj.isoformat() if date_obj else ""
+            date_str = date_obj if isinstance(date_obj, str) else (date_obj.isoformat() if date_obj else "")
         elif source == "app_store":
             # app-store-scraper fields
             text = raw.get("review", "")
             title = raw.get("title", "")
             rating = raw.get("rating", 0)
             date_obj = raw.get("date")
-            date_str = date_obj.isoformat() if date_obj else ""
+            date_str = date_obj if isinstance(date_obj, str) else (date_obj.isoformat() if date_obj else "")
         else:
             raise ValueError(f"Unknown source: {source}")
 

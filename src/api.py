@@ -14,11 +14,15 @@ app = FastAPI(title="Weekly Pulse API")
 # Allow frontend to communicate with backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # For development
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.get("/")
+def health_check():
+    return {"status": "ok", "service": "Weekly Pulse API"}
 
 class AnalyzeRequest(BaseModel):
     app_name: str

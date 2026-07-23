@@ -80,19 +80,20 @@ def run_pipeline(play_store_id: str, app_store_id: str, count: int) -> dict:
 
     # ── Phase 1: Ingest Reviews ────────────────────────────────
     log.info("-" * 40)
-    log.info("PHASE 1: Fetching reviews...")
+    log.info("PHASE 1: Fetching reviews via MCP...")
 
-    from src.ingestion.play_store import fetch_play_store_reviews
-    from src.ingestion.app_store import fetch_app_store_reviews
+    from src.integration.reviews_mcp import ReviewsFetcher
     from src.ingestion.normalizer import normalize, deduplicate
     from src.ingestion.sanitizer import sanitize
 
+    fetcher = ReviewsFetcher(server_url=config["MCP_REVIEWS_SERVER_URL"])
+
     log.info("  Fetching Play Store reviews for '%s'...", play_store_id)
-    play_raw = fetch_play_store_reviews(play_store_id, count=count)
+    play_raw = fetcher.fetch_play_store_reviews(play_store_id, count=count)
     log.info("  Fetched %d raw Play Store reviews.", len(play_raw))
 
     log.info("  Fetching App Store reviews for '%s'...", app_store_id)
-    app_raw = fetch_app_store_reviews(app_store_id, count=count)
+    app_raw = fetcher.fetch_app_store_reviews(app_store_id, count=count)
     log.info("  Fetched %d raw App Store reviews.", len(app_raw))
 
     # Normalize
