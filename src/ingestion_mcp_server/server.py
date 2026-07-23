@@ -9,7 +9,7 @@ SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 
 # Create a FastMCP server named "ReviewFetcher"
 port = int(os.environ.get("PORT", 8001))
-mcp = FastMCP("ReviewFetcher", port=port)
+mcp = FastMCP("ReviewFetcher", port=port, host="0.0.0.0")
 
 @mcp.tool()
 def fetch_play_store_reviews(app_id: str, count: int = 100) -> list[dict]:
