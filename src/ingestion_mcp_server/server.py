@@ -5,6 +5,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from .tools.gmail import send_email_impl, draft_email_impl, EmailSchema
+from .tools.docs import (
+    append_to_google_doc_impl, DocsAppendSchema,
+    create_document_impl, DocsCreateSchema,
+)
+
 SERPAPI_KEY = os.getenv("SERPAPI_KEY")
 
 # Create a FastMCP server named "ReviewFetcher"
@@ -69,6 +75,82 @@ def fetch_app_store_reviews(app_id: str, count: int = 100) -> list[dict]:
         })
     return formatted
 
+@mcp.tool()
+def send_email(
+    to: list[str],
+    subject: str,
+    body: str,
+    cc: list[str] = None,
+    bcc: list[str] = None,
+    body_type: str = "plain"
+) -> dict:
+    """
+    Send an email immediately via the authenticated Gmail account.
+    """
+    if body_type not in ["plain", "html"]:
+        raise ValueError("body_type must be either 'plain' or 'html'")
+        
+    params = EmailSchema(
+        to=to, subject=subject, body=body, cc=cc, bcc=bcc, body_type=body_type
+    )
+    return send_email_impl(params)
+
+@mcp.tool()
+def draft_email(
+    to: list[str],
+    subject: str,
+    body: str,
+    cc: list[str] = None,
+    bcc: list[str] = None,
+    body_type: str = "plain"
+) -> dict:
+    """
+    Create a draft in the authenticated Gmail account without sending.
+    """
+    if body_type not in ["plain", "html"]:
+        raise ValueError("body_type must be either 'plain' or 'html'")
+        
+    params = EmailSchema(
+        to=to, subject=subject, body=body, cc=cc, bcc=bcc, body_type=body_type
+    )
+    return draft_email_impl(params)
+
+@mcp.tool()
+def create_document(
+    title: str,
+    content: str,
+) -> dict:
+    """
+    Create a new Google Doc with the given title and body content.
+    """
+    params = DocsCreateSchema(title=title, content=content)
+    return create_document_impl(params)
+
+@mcp.tool()
+def append_to_google_doc(
+    document_id: str,
+    content: str,
+    add_timestamp_heading: bool = False,
+    leading_newline: bool = True
+) -> dict:
+    """
+    Append text content to the end of an existing Google Doc.
+    """
+    params = DocsAppendSchema(
+        document_id=document_id,
+        content=content,
+        add_timestamp_heading=add_timestamp_heading,
+        leading_newline=leading_newline
+    )
+    return append_to_google_doc_impl(params)
+
 if __name__ == "__main__":
+    from .auth import get_credentials
+    import sys
+    try:
+        get_credentials()
+    except Exception as e:
+        print(f"Failed to initialize credentials: {e}", file=sys.stderr)
+
     # You can run this with SSE for cloud deployment, or stdio for local
     mcp.run(transport="sse")
